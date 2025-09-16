@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialSphere</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hidden { display: none; }
+        .modal-bg { background-color: rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div id="app-container" class="max-w-4xl mx-auto">
+
+        <!-- Header -->
+        <header id="app-header" class="bg-white shadow-md p-4 flex justify-between items-center sticky top-0 z-50 hidden">
+            <h1 class="text-2xl font-bold text-blue-600 cursor-pointer" id="header-title">SocialSphere</h1>
+            <div id="nav-links" class="flex items-center space-x-4">
+                <a href="#" id="home-nav" class="text-gray-600 hover:text-blue-600 font-medium">Home</a>
+                <a href="#" id="profile-nav" class="text-gray-600 hover:text-blue-600 font-medium">Profile</a>
+                <button id="logout-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg">Logout</button>
+            </div>
+        </header>
+
+        <main id="main-content" class="p-4 md:p-8">
+            <!-- Auth View -->
+            <div id="auth-view">
+                <div class="bg-white p-8 rounded-2xl shadow-lg max-w-md mx-auto">
+                    <!-- Login Form -->
+                    <div id="login-form-container">
+                        <h2 class="text-3xl font-bold text-center mb-2">Welcome Back!</h2>
+                        <p class="text-center text-gray-500 mb-6">Please login to your account.</p>
+                        <form id="login-form">
+                            <div class="mb-4">
+                                <label for="login-username" class="block text-sm font-medium text-gray-700">Username</label>
+                                <input type="text" id="login-username" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="mb-6">
+                                <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
+                                <input type="password" id="login-password" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">Login</button>
+                        </form>
+                        <p class="text-center text-sm text-gray-600 mt-6">
+                            Don't have an account? <a href="#" id="show-signup" class="font-medium text-blue-600 hover:text-blue-500">Sign up</a>
+                        </p>
+                    </div>
+
+                    <!-- Signup Form -->
+                    <div id="signup-form-container" class="hidden">
+                         <h2 class="text-3xl font-bold text-center mb-2">Create Account</h2>
+                        <p class="text-center text-gray-500 mb-6">Join the SocialSphere community!</p>
+                        <form id="signup-form">
+                            <div class="mb-4">
+                                <label for="signup-username" class="block text-sm font-medium text-gray-700">Username</label>
+                                <input type="text" id="signup-username" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="signup-email" class="block text-sm font-medium text-gray-700">Email</label>
+                                <input type="email" id="signup-email" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="mb-6">
+                                <label for="signup-password" class="block text-sm font-medium text-gray-700">Password</label>
+                                <input type="password" id="signup-password" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">Sign Up</button>
+                        </form>
+                        <p class="text-center text-sm text-gray-600 mt-6">
+                            Already have an account? <a href="#" id="show-login" class="font-medium text-blue-600 hover:text-blue-500">Login</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feed View -->
+            <div id="feed-view" class="hidden max-w-2xl mx-auto">
+                <!-- Create Post Form -->
+                <div class="bg-white p-4 rounded-2xl shadow-md mb-6">
+                    <h3 class="font-bold mb-2 text-lg">Create a new post</h3>
+                    <form id="create-post-form">
+                        <textarea id="post-content" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="What's on your mind?"></textarea>
+                        <button type="submit" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Post</button>
+                    </form>
+                </div>
+                 <!-- Feed Tabs -->
+                <div class="mb-4 border-b border-gray-200">
+                    <nav class="flex space-x-4" aria-label="Tabs">
+                        <button id="following-feed-btn" class="px-3 py-2 font-medium text-sm rounded-t-lg border-b-2 border-blue-600 text-blue-600">Following</button>
+                        <button id="explore-feed-btn" class="px-3 py-2 font-medium text-sm rounded-t-lg border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Explore</button>
+                    </nav>
+                </div>
+                <!-- Posts Container -->
+                <div id="posts-container" class="space-y-6"></div>
+            </div>
+
+            <!-- Profile View -->
+            <div id="profile-view" class="hidden max-w-2xl mx-auto">
+                <button id="back-to-feed-from-profile-btn" class="mb-4 text-blue-600 hover:underline">&larr; Back to feed</button>
+                 <div class="bg-white p-6 rounded-2xl shadow-md text-center">
+                    <div id="profile-info" class="mb-6"></div>
+                    <div id="profile-posts-container"></div>
+                </div>
+            </div>
+
+            <!-- Single Post/Comments View -->
+            <div id="comments-view" class="hidden max-w-2xl mx-auto">
+                 <button id="back-to-feed-from-comments-btn" class="mb-4 text-blue-600 hover:underline">&larr; Back to feed</button>
+                <div id="single-post-container" class="bg-white p-4 rounded-2xl shadow-md mb-4"></div>
+                <div class="bg-white p-4 rounded-2xl shadow-md">
+                    <h3 class="font-bold mb-2">Comments</h3>
+                    <form id="comment-form" class="mb-4">
+                        <textarea id="comment-content" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Add a comment..."></textarea>
+                        <button type="submit" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Comment</button>
+                    </form>
+                    <div id="comments-container" class="space-y-4"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Universal Modal -->
+    <div id="edit-modal" class="hidden fixed inset-0 z-50 overflow-y-auto modal-bg flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <h3 id="modal-title" class="text-xl font-bold mb-4">Edit Content</h3>
+            <form id="modal-form">
+                <textarea id="modal-textarea" class="w-full p-2 border border-gray-300 rounded-lg mb-4 h-32"></textarea>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" id="modal-cancel-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Cancel</button>
+                    <button type="submit" id="modal-save-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Custom Confirm Dialog -->
+    <div id="confirm-dialog" class="hidden fixed inset-0 z-50 modal-bg flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm">
+            <h3 id="confirm-title" class="text-lg font-bold mb-4">Are you sure?</h3>
+            <p id="confirm-text" class="text-gray-600 mb-6">This action cannot be undone.</p>
+            <div class="flex justify-end space-x-2">
+                <button id="confirm-cancel-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Cancel</button>
+                <button id="confirm-ok-btn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Popup -->
+    <div id="message-popup" class="hidden fixed bottom-5 right-5 text-white py-2 px-4 rounded-lg shadow-xl animate-bounce">
+        <p id="message-text"></p>
+    </div>
+
+<script>
+// --- SCRIPT START ---
+document.addEventListener('DOMContentLoaded', () => {
+
+    const API_URL = 'http://localhost:3000/api';
+
+    // App State
+    let state = {
+        token: localStorage.getItem('token'),
+        currentUser: JSON.parse(localStorage.getItem('user')),
+        currentView: 'auth', // auth, feed, profile, comments
+        currentProfileId: null,
+        currentPostId: null,
+        activeFeed: 'following' // 'following' or 'explore'
+    };
+
+    // --- DOM Elements ---
+    const appHeader = document.getElementById('app-header');
+    const mainContent = document.getElementById('main-content');
+    const authView = document.getElementById('auth-view');
+    const feedView = document.getElementById('feed-view');
+    const profileView = document.getElementById('profile-view');
+    const commentsView = document.getElementById('comments-view');
+    const headerTitle = document.getElementById('header-title');
+    
+    // Forms
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const createPostForm = document.getElementById('create-post-form');
+    const commentForm = document.getElementById('comment-form');
+
+    // Auth Links
+    const showSignupLink = document.getElementById('show-signup');
+    const showLoginLink = document.getElementById('show-login');
+    
+    // Navigation
+    const logoutBtn = document.getElementById('logout-btn');
+    const homeNav = document.getElementById('home-nav');
+    const profileNav = document.getElementById('profile-nav');
+    const backToFeedFromCommentsBtn = document.getElementById('back-to-feed-from-comments-btn');
+    const backToFeedFromProfileBtn = document.getElementById('back-to-feed-from-profile-btn');
+
+    
+    // Feed Tabs
+    const followingFeedBtn = document.getElementById('following-feed-btn');
+    const exploreFeedBtn = document.getElementById('explore-feed-btn');
+
+    // Content Containers
+    const postsContainer = document.getElementById('posts-container');
+    const profileInfo = document.getElementById('profile-info');
+    const profilePostsContainer = document.getElementById('profile-posts-container');
+    const singlePostContainer = document.getElementById('single-post-container');
+    const commentsContainer = document.getElementById('comments-container');
+    
+    // Modal Elements
+    const editModal = document.getElementById('edit-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalForm = document.getElementById('modal-form');
+    const modalTextarea = document.getElementById('modal-textarea');
+    const modalCancelBtn = document.getElementById('modal-cancel-btn');
+    const modalSaveBtn = document.getElementById('modal-save-btn');
+    
+    // Confirm Dialog Elements
+    const confirmDialog = document.getElementById('confirm-dialog');
+    const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+    const confirmOkBtn = document.getElementById('confirm-ok-btn');
+
+    // --- API Helper ---
+    async function apiRequest(endpoint, method = 'GET', body = null) {
+        const headers = { 'Content-Type': 'application/json' };
+        if (state.token) {
+            headers['Authorization'] = `Bearer ${state.token}`;
+        }
+        
+        try {
+            const response = await fetch(`${API_URL}${endpoint}`, {
+                method,
+                headers,
+                body: body ? JSON.stringify(body) : null
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+            }
+
+            if (response.status === 204) return null; // Handle No Content response
+
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                return response.json();
+            }
+            return {};
+
+        } catch (error) {
+            console.error('API Request Error:', error);
+            showMessage(error.message, 'error');
+            throw error;
+        }
+    }
+    
+    // --- Custom Confirmation Dialog ---
+    function showConfirmDialog(title, text) {
+        return new Promise((resolve) => {
+            document.getElementById('confirm-title').textContent = title;
+            document.getElementById('confirm-text').textContent = text;
+            confirmDialog.classList.remove('hidden');
+
+            const onOk = () => {
+                confirmDialog.classList.add('hidden');
+                resolve(true);
+                cleanup();
+            };
+            
+            const onCancel = () => {
+                confirmDialog.classList.add('hidden');
+                resolve(false);
+                cleanup();
+            };
+            
+            const cleanup = () => {
+                confirmOkBtn.removeEventListener('click', onOk);
+                confirmCancelBtn.removeEventListener('click', onCancel);
+            }
+            
+            confirmOkBtn.addEventListener('click', onOk, { once: true });
+            confirmCancelBtn.addEventListener('click', onCancel, { once: true });
+        });
+    }
+
+    // --- UI Rendering ---
+    
+    function render() {
+        // Hide all views
+        [authView, feedView, profileView, commentsView].forEach(v => v.classList.add('hidden'));
+        appHeader.classList.toggle('hidden', !state.token);
+
+        switch(state.currentView) {
+            case 'auth':
+                authView.classList.remove('hidden');
+                break;
+            case 'feed':
+                feedView.classList.remove('hidden');
+                loadFeed();
+                break;
+            case 'profile':
+                profileView.classList.remove('hidden');
+                loadProfile(state.currentProfileId);
+                break;
+            case 'comments':
+                commentsView.classList.remove('hidden');
+                loadCommentsForPost(state.currentPostId);
+                break;
+        }
+    }
+
+    const createPostElement = (post) => {
+        const postDiv = document.createElement('div');
+        postDiv.className = 'bg-white p-5 rounded-2xl shadow-md';
+        postDiv.id = `post-${post.id}`;
+        const isLiked = post.likes.some(like => like.userId === state.currentUser.id);
+        const isAuthor = post.author.id === state.currentUser.id;
+
+        postDiv.innerHTML = `
+            <div class="flex items-start justify-between">
+                <div class="flex items-center mb-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-3 shrink-0">
+                        ${post.author.username.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                        <a href="#" class="font-bold hover:underline" data-user-id="${post.author.id}">${post.author.username}</a>
+                        <p class="text-sm text-gray-500">${new Date(post.createdAt).toLocaleString()}</p>
+                    </div>
+                </div>
+                ${isAuthor ? `
+                <div class="flex space-x-2 text-gray-500">
+                    <button class="edit-btn" data-type="post" data-id="${post.id}" data-content="${escape(post.content)}"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hover:text-blue-600" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg></button>
+                    <button class="delete-btn" data-type="post" data-id="${post.id}"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hover:text-red-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg></button>
+                </div>
+                ` : ''}
+            </div>
+            <p class="mb-4 whitespace-pre-wrap">${post.content}</p>
+            <div class="flex items-center space-x-6 text-gray-500">
+                <button class="like-btn flex items-center space-x-1 hover:text-red-500 ${isLiked ? 'text-red-500' : ''}" data-post-id="${post.id}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="${isLiked ? 'currentColor' : 'none'}" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                    <span class="like-count">${post.likes.length}</span>
+                </button>
+                 <a href="#" class="comment-link flex items-center space-x-1 hover:text-blue-500" data-post-id="${post.id}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                    <span>${post._count.comments}</span>
+                </a>
+            </div>
+        `;
+        return postDiv;
+    };
+    
+    const createCommentElement = (comment) => {
+        const commentDiv = document.createElement('div');
+        commentDiv.className = 'border-t pt-4 ml-4 pl-4 border-l'; // Indent comments
+        commentDiv.id = `comment-${comment.id}`;
+        const isAuthor = comment.author.id === state.currentUser.id;
+
+        commentDiv.innerHTML = `
+            <div class="flex items-start justify-between">
+                <div class="flex items-center mb-2">
+                    <div class="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold mr-2 shrink-0">
+                       ${comment.author.username.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                       <a href="#" class="font-bold hover:underline" data-user-id="${comment.author.id}">${comment.author.username}</a>
+                       <p class="text-xs text-gray-500">${new Date(comment.createdAt).toLocaleString()}</p>
+                    </div>
+                </div>
+                ${isAuthor ? `
+                <div class="flex space-x-2 text-gray-500">
+                    <button class="edit-btn" data-type="comment" data-id="${comment.id}" data-content="${escape(comment.content)}"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hover:text-blue-600" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg></button>
+                    <button class="delete-btn" data-type="comment" data-id="${comment.id}"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hover:text-red-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg></button>
+                </div>
+                ` : ''}
+            </div>
+            <p class="whitespace-pre-wrap">${comment.content}</p>
+        `;
+        return commentDiv;
+    };
+
+    // --- Data Loading & Page Logic ---
+    async function loadFeed() {
+        // Update tab styles
+        if (state.activeFeed === 'following') {
+            followingFeedBtn.classList.add('border-blue-600', 'text-blue-600');
+            followingFeedBtn.classList.remove('border-transparent', 'text-gray-500');
+            exploreFeedBtn.classList.add('border-transparent', 'text-gray-500');
+            exploreFeedBtn.classList.remove('border-blue-600', 'text-blue-600');
+        } else {
+            exploreFeedBtn.classList.add('border-blue-600', 'text-blue-600');
+            exploreFeedBtn.classList.remove('border-transparent', 'text-gray-500');
+            followingFeedBtn.classList.add('border-transparent', 'text-gray-500');
+            followingFeedBtn.classList.remove('border-blue-600', 'text-blue-600');
+        }
+
+        try {
+            const endpoint = state.activeFeed === 'following' ? '/posts/feed' : '/posts/explore';
+            const posts = await apiRequest(endpoint);
+            postsContainer.innerHTML = ''; // Clear existing posts
+            if (posts.length > 0) {
+                 posts.forEach(post => {
+                    postsContainer.appendChild(createPostElement(post));
+                });
+            } else {
+                postsContainer.innerHTML = `<p class="text-center text-gray-500 mt-8">No posts to show here yet.</p>`
+            }
+        } catch (error) {
+            console.error('Failed to load feed', error);
+            postsContainer.innerHTML = `<p class="text-center text-red-500 mt-8">Could not load feed.</p>`
+        }
+    }
+    
+    async function loadProfile(userId) {
+        try {
+            const user = await apiRequest(`/users/${userId}`);
+            const posts = await apiRequest(`/users/${userId}/posts`);
+            
+            const isFollowing = user.followers.some(follower => follower.id === state.currentUser.id);
+            const isOwnProfile = user.id === state.currentUser.id;
+
+            profileInfo.innerHTML = `
+                <div class="w-24 h-24 rounded-full bg-blue-500 flex items-center justify-center text-white text-4xl font-bold mx-auto mb-4">
+                    ${user.username.charAt(0).toUpperCase()}
+                </div>
+                <h2 class="text-3xl font-bold">${user.username}</h2>
+                <p class="text-gray-600 my-4">${user.bio || 'No bio yet.'}</p>
+                <div class="flex justify-center space-x-6 my-4 text-gray-600">
+                    <span><strong>${user._count.posts}</strong> Posts</span>
+                    <span><strong>${user._count.followers}</strong> Followers</span>
+                    <span><strong>${user._count.following}</strong> Following</span>
+                </div>
+                ${!isOwnProfile ? `
+                <button class="follow-btn px-6 py-2 rounded-lg font-semibold ${isFollowing ? 'bg-gray-200 text-gray-800' : 'bg-blue-600 text-white'}" data-user-id="${user.id}">
+                    ${isFollowing ? 'Unfollow' : 'Follow'}
+                </button>
+                ` : `
+                 <button class="edit-btn px-6 py-2 rounded-lg font-semibold bg-gray-200 text-gray-800" data-type="profile" data-id="${user.id}" data-content="${escape(user.bio || '')}">
+                    Edit Profile
+                </button>
+                `}
+            `;
+
+            profilePostsContainer.innerHTML = '<h3 class="text-2xl font-bold border-t pt-6 mt-6 text-left">Posts</h3>';
+            const postsGrid = document.createElement('div');
+            postsGrid.className = "space-y-6 mt-4";
+            if(posts.length > 0) {
+                posts.forEach(post => {
+                    postsGrid.appendChild(createPostElement(post));
+                });
+            } else {
+                postsGrid.innerHTML = '<p class="text-gray-500">This user has no posts yet.</p>';
+            }
+            profilePostsContainer.appendChild(postsGrid);
+
+        } catch (error) {
+            console.error('Failed to load profile', error);
+        }
+    }
+
+    async function loadCommentsForPost(postId) {
+        try {
+            const post = await apiRequest(`/posts/${postId}`);
+            if (!post) throw new Error('Post not found');
+            
+            singlePostContainer.innerHTML = '';
+            singlePostContainer.appendChild(createPostElement(post));
+            
+            const comments = await apiRequest(`/posts/${postId}/comments`);
+            commentsContainer.innerHTML = '';
+            comments.forEach(comment => {
+                commentsContainer.appendChild(createCommentElement(comment));
+            });
+            commentForm.dataset.postId = postId;
+        } catch (error) {
+            console.error('Failed to load comments', error);
+            // If post was deleted, navigate back
+            if (error.message.includes('404') || error.message.includes('not found')) {
+                showMessage('This post no longer exists.', 'error');
+                navigateTo('feed');
+            }
+        }
+    }
+
+    function updateLike(postId, likes, likeCount) {
+        const postElements = document.querySelectorAll(`button[data-post-id="${postId}"].like-btn`);
+        postElements.forEach(btn => {
+            const isLiked = likes.some(like => like.userId === state.currentUser.id);
+            const svg = btn.querySelector('svg');
+            const span = btn.querySelector('.like-count');
+            
+            btn.classList.toggle('text-red-500', isLiked);
+            svg.setAttribute('fill', isLiked ? 'currentColor' : 'none');
+            span.textContent = likeCount;
+        });
+    }
+    
+    function showMessage(message, type = 'info') {
+        const popup = document.getElementById('message-popup');
+        const text = document.getElementById('message-text');
+        
+        text.textContent = message;
+        popup.className = `fixed bottom-5 right-5 text-white py-2 px-4 rounded-lg shadow-xl`;
+        popup.classList.add(type === 'error' ? 'bg-red-500' : 'bg-green-500');
+        popup.classList.remove('hidden');
+        
+        setTimeout(() => popup.classList.add('hidden'), 3000);
+    }
+    
+    // --- Event Handlers ---
+    
+    function handleAuth(token, user) {
+        state.token = token;
+        state.currentUser = user;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        navigateTo('feed');
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+        try {
+            const data = await apiRequest('/auth/login', 'POST', { username, password });
+            handleAuth(data.token, data.user);
+        } catch (error) { /* Error message is shown by apiRequest helper */ }
+    });
+
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('signup-username').value;
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+        try {
+            await apiRequest('/auth/signup', 'POST', { username, email, password });
+            showMessage('Signup successful! Please log in.', 'success');
+            document.getElementById('signup-form-container').classList.add('hidden');
+            document.getElementById('login-form-container').classList.remove('hidden');
+            signupForm.reset();
+        } catch (error) { /* Handled by helper */ }
+    });
+    
+    createPostForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const content = document.getElementById('post-content').value;
+        if (!content.trim()) return;
+        try {
+            await apiRequest('/posts', 'POST', { content });
+            document.getElementById('post-content').value = '';
+            loadFeed();
+        } catch(error) { console.error('Failed to create post'); }
+    });
+
+    commentForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const postId = e.target.dataset.postId;
+        const content = document.getElementById('comment-content').value;
+        if(!content.trim()) return;
+        try {
+            await apiRequest(`/posts/${postId}/comments`, 'POST', { content });
+            document.getElementById('comment-content').value = '';
+            loadCommentsForPost(postId);
+        } catch(error) { console.error('Failed to add comment'); }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+        state.token = null;
+        state.currentUser = null;
+        localStorage.clear();
+        navigateTo('auth');
+    });
+
+    // --- Navigation ---
+    showSignupLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('login-form-container').classList.add('hidden');
+        document.getElementById('signup-form-container').classList.remove('hidden');
+    });
+
+    showLoginLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('signup-form-container').classList.add('hidden');
+        document.getElementById('login-form-container').classList.remove('hidden');
+    });
+
+    homeNav.addEventListener('click', (e) => { e.preventDefault(); navigateTo('feed'); });
+    headerTitle.addEventListener('click', (e) => { e.preventDefault(); navigateTo('feed'); });
+    profileNav.addEventListener('click', (e) => { e.preventDefault(); navigateTo('profile', { profileId: state.currentUser.id }); });
+    backToFeedFromCommentsBtn.addEventListener('click', (e) => { e.preventDefault(); navigateTo('feed'); });
+    backToFeedFromProfileBtn.addEventListener('click', (e) => { e.preventDefault(); navigateTo('feed'); });
+
+    followingFeedBtn.addEventListener('click', () => { state.activeFeed = 'following'; loadFeed(); });
+    exploreFeedBtn.addEventListener('click', () => { state.activeFeed = 'explore'; loadFeed(); });
+
+    // --- Event Delegation for Dynamic Content ---
+    mainContent.addEventListener('click', async (e) => {
+        const likeBtn = e.target.closest('.like-btn');
+        const commentLink = e.target.closest('.comment-link');
+        const profileLink = e.target.closest('a[data-user-id]');
+        const followBtn = e.target.closest('.follow-btn');
+        const editBtn = e.target.closest('.edit-btn');
+        const deleteBtn = e.target.closest('.delete-btn');
+        
+        if (likeBtn) {
+            e.preventDefault();
+            const postId = likeBtn.dataset.postId;
+            try {
+                const updatedPost = await apiRequest(`/posts/${postId}/like`, 'POST');
+                updateLike(postId, updatedPost.likes, updatedPost.likes.length);
+            } catch (error) { console.error('Failed to process like', error); }
+        }
+        
+        if (commentLink) { e.preventDefault(); navigateTo('comments', { postId: commentLink.dataset.postId }); }
+        if (profileLink) { e.preventDefault(); navigateTo('profile', { profileId: profileLink.dataset.userId }); }
+
+        if (followBtn) {
+            e.preventDefault();
+            const userId = followBtn.dataset.userId;
+            try {
+                await apiRequest(`/users/${userId}/follow`, 'POST');
+                loadProfile(userId); // Reload profile to show updated follow status
+            } catch (error) { console.error('Failed to process follow', error); }
+        }
+        
+        if (deleteBtn) {
+            e.preventDefault();
+            const type = deleteBtn.dataset.type; // 'post' or 'comment'
+            const id = deleteBtn.dataset.id;
+            
+            const confirmed = await showConfirmDialog(`Delete ${type}?`, `Are you sure you want to delete this ${type}? This action is permanent.`);
+            
+            if (confirmed) {
+                try {
+                    await apiRequest(`/${type}s/${id}`, 'DELETE');
+                    showMessage(`${type} deleted successfully.`, 'success');
+                    // Refresh the current view
+                    if (state.currentView === 'comments' && type === 'post') {
+                        navigateTo('feed');
+                    } else {
+                        render();
+                    }
+                } catch (error) { console.error(`Failed to delete ${type}`, error); }
+            }
+        }
+        
+        if (editBtn) {
+            e.preventDefault();
+            const { type, id, content } = editBtn.dataset;
+            showEditModal(type, id, unescape(content));
+        }
+    });
+    
+    function showEditModal(type, id, currentContent) {
+        modalTitle.textContent = `Edit ${type}`;
+        modalTextarea.value = currentContent;
+        editModal.classList.remove('hidden');
+
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+            const newContent = modalTextarea.value;
+            try {
+                if (type === 'profile') {
+                    await apiRequest('/profile', 'PUT', { bio: newContent });
+                } else {
+                    await apiRequest(`/${type}s/${id}`, 'PUT', { content: newContent });
+                }
+                showMessage(`${type} updated successfully.`, 'success');
+                editModal.classList.add('hidden');
+                render(); // Re-render the current view to show changes
+            } catch(error) {
+                console.error(`Failed to update ${type}`, error);
+            } finally {
+                modalForm.removeEventListener('submit', handleSubmit);
+            }
+        };
+        modalForm.addEventListener('submit', handleSubmit);
+        modalCancelBtn.addEventListener('click', () => editModal.classList.add('hidden'), { once: true });
+    }
+    
+    function navigateTo(view, params = {}) {
+        state.currentView = view;
+        if (params.profileId) state.currentProfileId = params.profileId;
+        if (params.postId) state.currentPostId = params.postId;
+        render();
+    }
+    
+    // --- Initial Load ---
+    function initialize() {
+        if (state.token && state.currentUser) {
+            navigateTo('feed');
+        } else {
+            navigateTo('auth');
+        }
+    }
+
+    initialize();
+});
+</script>
+</body>
+</html>
+
