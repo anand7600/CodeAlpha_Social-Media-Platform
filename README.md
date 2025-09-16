@@ -53,9 +53,11 @@ Clone the repository:
 git clone [https://github.com/YourUsername/CodeAlpha_SocialSphere.git](https://github.com/YourUsername/CodeAlpha_SocialSphere.git)
 cd CodeAlpha_SocialSphere/backend
 
+
 Install dependencies:
 
 npm install
+
 
 Set up your environment variables:
 
@@ -66,6 +68,7 @@ Add your MongoDB Atlas connection string and a JWT secret:
 DATABASE_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/social-media-db?retryWrites=true&w=majority"
 JWT_SECRET="YOUR_SUPER_SECRET_KEY"
 
+
 Whitelist your IP Address in MongoDB Atlas:
 
 In your Atlas dashboard, go to Network Access and add your current IP address (0.0.0.0/0 for access from anywhere).
@@ -74,9 +77,11 @@ Sync the database schema:
 
 npx prisma db push
 
+
 Run the backend server:
 
 npm run dev
+
 
 The server will be running on http://localhost:3000.
 
